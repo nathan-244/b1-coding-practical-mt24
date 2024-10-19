@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from .terrain import generate_reference_and_limits
+from .control import PDController        
 
 class Submarine:
     def __init__(self):
@@ -106,7 +107,13 @@ class ClosedLoop:
         for t in range(T):
             positions[t] = self.plant.get_position()
             observation_t = self.plant.get_depth()
-            # Call your controller here
+
+            # Use the PD controller to compute the control action
+            reference_depth = mission.reference[t]
+            actions[t] = self.controller.compute_control_action(reference_depth, observation_t)
+
+            
+            # Transition the plant with the computed action and disturbance
             self.plant.transition(actions[t], disturbances[t])
 
         return Trajectory(positions)
