@@ -77,14 +77,16 @@ class Mission:
 
     @classmethod
     def from_csv(cls, file_name: str) -> Mission:
-        # Read the CSV file into a DataFrame
-        df = pd.read_csv(file_name)
+#eddited
         
-        # Assuming the CSV has columns named 'reference', 'cave_height', and 'cave_depth'
+        # Read the CSV file into a DataFrame
+        df = pd.read_csv(file_name)             
+        
+        # convert columns to numpy arrays 
         reference = df['reference'].to_numpy()
         cave_height = df['cave_height'].to_numpy()
         cave_depth = df['cave_depth'].to_numpy()
-        
+#-----------------        
         # Return an instance of the Mission class
         return cls(reference, cave_height, cave_depth)
 
@@ -108,10 +110,11 @@ class ClosedLoop:
             positions[t] = self.plant.get_position()
             observation_t = self.plant.get_depth()
 
+#eddited
             # Use the PD controller to compute the control action
             reference_depth = mission.reference[t]
             actions[t] = self.controller.compute_control_action(reference_depth, observation_t)
-
+#-----------------
             
             # Transition the plant with the computed action and disturbance
             self.plant.transition(actions[t], disturbances[t])
